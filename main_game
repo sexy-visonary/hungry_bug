@@ -8,6 +8,9 @@ WINDOW_SIZE = (600,600)
 screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption('hungry bug')
 
+font = pygame.font.SysFont("Times New Roman, Arial", 30)
+text = font.render("Play", True, (255,255,255))
+
 # game elements defined
 player_img = pygame.image.load('player.png').convert()
 player_img.set_colorkey((255,255,255))
@@ -48,14 +51,37 @@ enemy4_x_momentum = 0
 
 
 
-
-
-
-
-
-
 # main loop
-while True:
+# home screen
+main_screen = True
+game_loop = False
+click = False
+while main_screen == True:
+    screen.fill((146,244,255))
+    mx,my = pygame.mouse.get_pos()
+    cursor = pygame.draw.rect(screen,(0,0,0),[mx,my,1,1])
+    play = pygame.draw.rect(screen,(0,0,0),[100,150,400,150])
+    pygame.draw.rect(screen,(0,0,0),[100,350,400,150])
+    if cursor.colliderect(play) and click == True:
+        game_loop = True
+        main_screen = False
+
+    screen.blit(text, (275,200))
+
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 1:
+                click = True
+    pygame.display.update()
+    mainClock.tick(60)
+
+
+
+# game loop
+while game_loop == True:
     screen.fill((146,244,255))
 
     # player movement
@@ -157,12 +183,15 @@ while True:
     if food1_there == False and food2_there == False and food3_there == False and food4_there == False:
         print('You win!')
 
-
+    click = False
     # Buttons ------------------------------------------------ #
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 1:
+                click = True
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 pygame.quit()

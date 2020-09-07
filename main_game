@@ -1,0 +1,197 @@
+import pygame, sys, random
+from pygame.locals import *
+mainClock = pygame.time.Clock()
+pygame.init()
+
+WINDOW_SIZE = (600,600)
+
+screen = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption('hungry bug')
+
+# game elements defined
+player_img = pygame.image.load('player.png').convert()
+player_img.set_colorkey((255,255,255))
+grass_img = pygame.image.load('grass.png')
+dirt_img = pygame.image.load('dirt.png')
+
+# player defined
+player_right = False
+player_left = False
+player_down = False
+player_up = False
+vertical_momentum = 0
+
+player_rect = pygame.Rect(100,100,5,12)
+
+#food defined
+food1 = [250,250,10,10]
+food1_there = True
+food2 = [150,400,10,10]
+food2_there = True
+food3 = [400,150,10,10]
+food3_there = True
+food4 = [300,450,10,10]
+food4_there = True
+
+# enemy defined
+enemy1 = [0,250,10,10]
+enemy1_x_momentum = 0
+enemy2 = [0,400,10,10]
+enemy2_x_momentum = 0
+enemy3 = [0,150,10,10]
+enemy3_x_momentum = 0
+enemy4 = [0,450,10,10]
+enemy4_x_momentum = 0
+
+
+
+
+
+
+
+
+
+
+
+
+# main loop
+while True:
+    screen.fill((146,244,255))
+
+    # player movement
+    player_movement = [0,0]
+    if player_right == True:
+        player_rect[0] += 2
+    if player_left == True:
+        player_rect[0] -= 2
+    if player_up == True:
+        player_rect[1] -= 2
+    if player_down == True:
+        player_rect[1] += 2
+
+    # food spawn
+    if food1_there == True:
+        pygame.draw.rect(screen,(0,0,0),food1)
+    if food2_there == True:
+        pygame.draw.rect(screen,(0,0,0),food2)
+    if food3_there == True:
+        pygame.draw.rect(screen,(0,0,0),food3)
+    if food4_there == True:
+        pygame.draw.rect(screen,(0,0,0),food4)
+
+    # player eats food
+    if player_rect.colliderect(food1):
+        food1_there = False
+        pygame.draw.rect(screen,(146,244,255),food1)
+    if player_rect.colliderect(food2):
+        food2_there = False
+        pygame.draw.rect(screen,(146,244,255),food2)
+    if player_rect.colliderect(food3):
+        food3_there = False
+        pygame.draw.rect(screen,(146,244,255),food3)
+    if player_rect.colliderect(food4):
+        food4_there = False
+        pygame.draw.rect(screen,(146,244,255),food4)
+
+    # player death
+    if player_rect.colliderect(enemy1):
+        player_rect = pygame.Rect(100,100,5,12)
+        food1_there = True
+        food2_there = True
+        food3_there = True
+        food4_there = True
+    if player_rect.colliderect(enemy2):
+        player_rect = pygame.Rect(100,100,5,12)
+        food1_there = True
+        food2_there = True
+        food3_there = True
+        food4_there = True
+    if player_rect.colliderect(enemy3):
+        player_rect = pygame.Rect(100,100,5,12)
+        food1_there = True
+        food2_there = True
+        food3_there = True
+        food4_there = True
+    if player_rect.colliderect(enemy4):
+        player_rect = pygame.Rect(100,100,5,12)
+        food1_there = True
+        food2_there = True
+        food3_there = True
+        food4_there = True
+
+    # enemy spawn
+    pygame.draw.rect(screen,(0,0,0),enemy1)
+    pygame.draw.rect(screen,(0,0,0),enemy2)
+    pygame.draw.rect(screen,(0,0,0),enemy3)
+    pygame.draw.rect(screen,(0,0,0),enemy4)
+
+    # enemy movement
+    if enemy1[0] > screen.get_width():
+        enemy1_x_momentum = -enemy1_x_momentum
+    else:
+        enemy1_x_momentum += .2
+    enemy1[0] += enemy1_x_momentum
+    #----------------------------------
+    if enemy2[0] > screen.get_width():
+        enemy2_x_momentum = -enemy2_x_momentum
+    else:
+        enemy2_x_momentum += .2
+    enemy2[0] += enemy2_x_momentum
+    #----------------------------------
+    if enemy3[0] > screen.get_width():
+        enemy3_x_momentum = -enemy3_x_momentum
+    else:
+        enemy3_x_momentum += .2
+    enemy3[0] += enemy3_x_momentum
+    #----------------------------------
+    if enemy4[0] > screen.get_width():
+        enemy4_x_momentum = -enemy4_x_momentum
+    else:
+        enemy4_x_momentum += .2
+    enemy4[0] += enemy4_x_momentum
+    
+    # player spawn
+    screen.blit(player_img, (player_rect.x,player_rect.y))
+
+
+    if food1_there == False and food2_there == False and food3_there == False and food4_there == False:
+        print('You win!')
+
+
+    # Buttons ------------------------------------------------ #
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+            if event.key == K_RIGHT:
+                player_right = True
+            if event.key == K_LEFT:
+                player_left = True
+            if event.key == K_DOWN:
+                player_down = True
+            if event.key == K_UP:
+                player_up = True
+        if event.type == KEYUP:
+            if event.key == K_RIGHT:
+                player_right = False
+            if event.key == K_LEFT:
+                player_left = False
+            if event.key == K_DOWN:
+                player_down = False
+            if event.key == K_UP:
+                player_up = False
+
+    # Update ------------------------------------------------- #
+    pygame.display.update()
+    mainClock.tick(60)
+
+
+
+
+
+
+

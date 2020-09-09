@@ -9,13 +9,14 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption('hungry bug')
 
 font = pygame.font.SysFont("Times New Roman, Arial", 30)
-text = font.render("Play", True, (255,255,255))
+play_text = font.render("Play", True, (255,255,255))
+youWin_text = font.render("You win!", True, (255,255,0))
 
 # game elements defined
 player_img = pygame.image.load('player.png').convert()
 player_img.set_colorkey((255,255,255))
-grass_img = pygame.image.load('grass.png')
-dirt_img = pygame.image.load('dirt.png')
+goblin_img = pygame.image.load('goblin.png')
+apple_img = pygame.image.load('apple.png')
 
 # player defined
 player_right = False
@@ -55,6 +56,7 @@ enemy4_x_momentum = 0
 # home screen
 main_screen = True
 game_loop = False
+youWin_loop = False
 click = False
 while main_screen == True:
     screen.fill((146,244,255))
@@ -66,7 +68,7 @@ while main_screen == True:
         game_loop = True
         main_screen = False
 
-    screen.blit(text, (275,200))
+    screen.blit(play_text, (275,200))
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -97,13 +99,17 @@ while game_loop == True:
 
     # food spawn
     if food1_there == True:
-        pygame.draw.rect(screen,(0,0,0),food1)
+        pygame.draw.rect(screen,(146,244,255),food1)
+        screen.blit(apple_img,(food1[0],food1[1]))
     if food2_there == True:
-        pygame.draw.rect(screen,(0,0,0),food2)
+        pygame.draw.rect(screen,(146,244,255),food2)
+        screen.blit(apple_img,(food2[0],food2[1]))
     if food3_there == True:
-        pygame.draw.rect(screen,(0,0,0),food3)
+        pygame.draw.rect(screen,(146,244,255),food3)
+        screen.blit(apple_img,(food3[0],food3[1]))
     if food4_there == True:
-        pygame.draw.rect(screen,(0,0,0),food4)
+        pygame.draw.rect(screen,(146,244,255),food4)
+        screen.blit(apple_img,(food4[0],food4[1]))
 
     # player eats food
     if player_rect.colliderect(food1):
@@ -146,10 +152,14 @@ while game_loop == True:
         food4_there = True
 
     # enemy spawn
-    pygame.draw.rect(screen,(0,0,0),enemy1)
-    pygame.draw.rect(screen,(0,0,0),enemy2)
-    pygame.draw.rect(screen,(0,0,0),enemy3)
-    pygame.draw.rect(screen,(0,0,0),enemy4)
+    pygame.draw.rect(screen,(146,244,255),enemy1)
+    screen.blit(goblin_img, (enemy1[0], enemy1[1]))
+    pygame.draw.rect(screen,(146,244,255),enemy2)
+    screen.blit(goblin_img, (enemy2[0], enemy2[1]))
+    pygame.draw.rect(screen,(146,244,255),enemy3)
+    screen.blit(goblin_img, (enemy3[0], enemy3[1]))
+    pygame.draw.rect(screen,(146,244,255),enemy4)
+    screen.blit(goblin_img, (enemy4[0], enemy4[1]))
 
     # enemy movement
     if enemy1[0] > screen.get_width():
@@ -179,9 +189,10 @@ while game_loop == True:
     # player spawn
     screen.blit(player_img, (player_rect.x,player_rect.y))
 
-
+    # game win
     if food1_there == False and food2_there == False and food3_there == False and food4_there == False:
-        print('You win!')
+        youWin_loop = True
+        game_loop = False
 
     click = False
     # Buttons ------------------------------------------------ #
@@ -218,7 +229,21 @@ while game_loop == True:
     pygame.display.update()
     mainClock.tick(60)
 
+while youWin_loop == True:
+    screen.fill((146,244,255))
+    screen.blit(youWin_text, (250,250))
 
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+
+    pygame.display.update()
+    mainClock.tick(60)
 
 
 
